@@ -1,0 +1,31 @@
+name: Auto-bump CrankBoy Manager
+
+on:
+  repository_dispatch:
+    types: [update-cask]
+
+jobs:
+  bump:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Tap
+        uses: actions/checkout@v4
+
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Update Cask Version
+        env:
+          COMMIT_USER: github-actions[bot]
+          COMMIT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: |
+          git config --global user.name "$COMMIT_USER"
+          git config --global user.email "$COMMIT_EMAIL"
+
+          # Automatically bump the version (pass the new version via repository_dispatch client_payload)
+          NEW_VERSION="${{ github.event.client_payload.version }}"
+
+          brew bump-cask-pr --version="$NEW_VERSION" --no-pr --no-audit Casks/crankboy-manager.rb
+
+          # Push changes back to your homebrew-tap repository
+          git push
