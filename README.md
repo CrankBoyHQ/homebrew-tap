@@ -8,6 +8,7 @@ You can install CrankBoy Manager directly via Homebrew:
 
 ```bash
 brew tap CrankBoyHQ/tap
+brew trust --cask crankboyhq/tap/crankboy-manager
 brew install crankboy-manager
 ```
 
